@@ -9,7 +9,17 @@ class ListAllUsersUseCase {
   constructor(private usersRepository: IUsersRepository) {}
 
   execute({ user_id }: IRequest): User[] {
-    // Complete aqui
+    const users = this.usersRepository.list();
+
+    const isAuthorizedUser = users.find(
+      (user) => user.id === user_id && user.admin
+    );
+
+    if (!isAuthorizedUser) {
+      throw new Error("Unauthorized");
+    }
+
+    return users;
   }
 }
 
